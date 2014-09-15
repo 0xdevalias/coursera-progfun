@@ -1,6 +1,8 @@
 package example
 
 import common._
+import scala.annotation.tailrec
+import java.util.NoSuchElementException
 
 object Lists {
   /**
@@ -23,7 +25,16 @@ object Lists {
    * @param xs A list of natural numbers
    * @return The sum of all elements in `xs`
    */
-  def sum(xs: List[Int]): Int = ???
+  def sum(xs: List[Int]): Int = {
+    @tailrec def sumWithTotal(total: Int, xs: List[Int]): Int = {
+      if (xs.isEmpty) total
+      else {
+        sumWithTotal(total + xs.head, xs.tail)
+      }
+    }
+    
+    sumWithTotal(0, xs)
+  }
 
   /**
    * This method returns the largest element in a list of integers. If the
@@ -38,5 +49,18 @@ object Lists {
    * @return The largest element in `xs`
    * @throws java.util.NoSuchElementException if `xs` is an empty list
    */
-  def max(xs: List[Int]): Int = ???
+  def max(xs: List[Int]): Int = {
+    @tailrec def maxWithMemory(max: Int, xs: List[Int]): Int = {
+      if (xs.isEmpty) max
+      else
+      {
+        val cur = xs.head
+        if (cur > max) maxWithMemory(cur, xs.tail)
+        else maxWithMemory(max, xs.tail)
+      }
+    }
+    
+    if (xs.isEmpty) throw new NoSuchElementException
+    maxWithMemory(xs.head, xs.tail)
+  }
 }
