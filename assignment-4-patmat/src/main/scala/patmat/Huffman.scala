@@ -256,7 +256,7 @@ object Huffman {
         }
       }
     }
-  
+
     convertLoop(tree, Nil)
   }
 
