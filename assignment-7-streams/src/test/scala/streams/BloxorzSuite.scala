@@ -1,10 +1,8 @@
 package streams
 
 import org.scalatest.FunSuite
-
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-
 import Bloxorz._
 
 @RunWith(classOf[JUnitRunner])
@@ -39,7 +37,7 @@ class BloxorzSuite extends FunSuite {
 
     val optsolution = List(Right, Right, Down, Right, Right, Right, Down)
   }
-
+    
   test("terrain function level 1") {
     new Level1 {
       assert(terrain(Pos(0,0)), "0,0")
@@ -50,6 +48,42 @@ class BloxorzSuite extends FunSuite {
   test("findChar level 1") {
     new Level1 {
       assert(startPos == Pos(1,1))
+    }
+  }
+  
+    test("isStanding") {
+    new Level1 {
+
+      val block = Block(Pos(0, 0), Pos(0, 0))
+
+      assert(block.isStanding)
+    }
+  }
+
+  test("neighborsWithHistory") {
+    new Level1 {
+      val nwh = neighborsWithHistory(Block(Pos(1, 1), Pos(1, 1)), List(Left, Up))
+
+      val valid = Set(
+        (Block(Pos(1, 2), Pos(1, 3)), List(Right, Left, Up)),
+        (Block(Pos(2, 1), Pos(3, 1)), List(Down, Left, Up)))
+
+      assert(nwh.toSet === valid)
+    }
+  }
+  
+  test("newNeighborsOnly") {
+    new Level1 {
+      val nno = newNeighborsOnly(
+        Set(
+          (Block(Pos(1, 2), Pos(1, 3)), List(Right, Left, Up)),
+          (Block(Pos(2, 1), Pos(3, 1)), List(Down, Left, Up))).toStream,
+        Set(Block(Pos(1, 2), Pos(1, 3)), Block(Pos(1, 1), Pos(1, 1))))
+
+      val valid = Set(
+        (Block(Pos(2, 1), Pos(3, 1)), List(Down, Left, Up))).toStream
+
+      assert(nno === valid)
     }
   }
 
